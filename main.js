@@ -144,6 +144,12 @@ form.addEventListener('submit', function(e) {
   if(!validate(szerelHtml, errormessage)){ //Megnézi, hogy a validate false-e
     valid = false; // Amennyiben false volt a valid értékét false-ra állítja
   };
+  if(szerel2Value!==undefined && szerel2Value === ""){  //Megnézi, hogy a szerel2Value értéke undefined-e
+    const parentElement = szerel2Html.parentElement; // Megkeressük az szerel2Value input mezőjének szülőelemét
+    const error = parentElement.querySelector('.error'); // Az szerel2Html mező szülőelemében keresünk egy "error" osztályú elemet
+    error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+    valid = false; // A valid változó értékét hamisra állítjuk
+  }
 
   // Ha minden adat megadott, új elemet adunk hozzá a tömbhöz
   if (valid) {
