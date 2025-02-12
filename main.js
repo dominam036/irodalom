@@ -34,27 +34,30 @@ const tomb = [
 const table = document.createElement('table'); 
 document.body.appendChild(table); // Táblázat hozzáadása a dokumentumhoz
 
-// Fejléc (thead) létrehozása és hozzáadása a táblázathoz
-const thead = document.createElement('thead');
-table.appendChild(thead);
-
-// Fejléc sor létrehozása
-const th_Row = document.createElement('tr'); 
-thead.appendChild(th_Row);
-
-// Fejléc oszlopok létrehozása és beállítása
-const th_szerzo = document.createElement('th'); 
-th_szerzo.innerHTML = fejlec.szerzo; // Beállítjuk a szerző oszlop fejlécét
-th_Row.appendChild(th_szerzo); 
-
-const th_kor = document.createElement('th'); 
-th_kor.innerHTML = fejlec.kor; // Beállítjuk a korszak oszlop fejlécét
-th_Row.appendChild(th_kor);
-
-const th_szerel = document.createElement('th'); 
-th_szerel.colSpan = 2; // Az utolsó oszlop két oszlopot foglalhat el (ha van második szerelem)
-th_szerel.innerHTML = fejlec.szerel; // Beállítjuk a szerelmek oszlop fejlécét
-th_Row.appendChild(th_szerel);
+function fejlecGen() {
+  // Fejléc (thead) létrehozása és hozzáadása a táblázathoz
+  const thead = document.createElement('thead');
+  table.appendChild(thead);
+  
+  // Fejléc sor létrehozása
+  const th_Row = document.createElement('tr'); 
+  thead.appendChild(th_Row);
+  
+  let counter = 0;
+  const fejlecValues = Object.values(fejlec); // Az objektum értékeinek lekérése tömb formájában
+  
+  for (const value of fejlecValues) { // Végigmegyünk a fejléc értékein
+    const th = document.createElement('th'); // Létrehozunk egy új fejléc cellát
+    th.innerHTML = value; // Beállítjuk a cella szövegét
+    th_Row.appendChild(th); // Hozzáadjuk a cellát a fejléc sorához
+    counter++;
+    
+    // Ha elértük a harmadik oszlopot, a szerelmek oszlophoz colSpan értéket adunk
+    if (counter === 3) {
+      th.colSpan = 2; // A harmadik oszlopot kétszeres szélességűre állítjuk
+    }
+  }
+}
 
 // Táblázat törzsének létrehozása
 const tbody = document.createElement('tbody');
@@ -62,6 +65,7 @@ table.appendChild(tbody);
 
 // Függvény, amely kirajzolja a táblázat adatait
 function renderTable() {
+  fejlecGen();
   for (let i = 0; i < tomb.length; i++) { // Végigiterálunk a `tomb` tömb elemein
       const row = document.createElement('tr'); // Új sor létrehozása a táblázathoz
       tbody.appendChild(row); // A létrehozott sort hozzáadjuk a táblázat törzséhez (tbody)
