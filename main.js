@@ -102,6 +102,18 @@ function validate(inputElement, errormessage){ // Függvény létrehozésa két 
   return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
 }
 
+function validate2(inputElement, inputElementValue, errormessage) { // Függvény, amely validálja az input mezőt és hibaüzenetet jelenít meg
+  let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
+  if (inputElementValue === "" && inputElementValue !== undefined) { // Ellenőrizzük, hogy az input mező értéke üres-e, és nem undefined
+      const parentElement = inputElement.parentElement; // Megkeressük az input mező szülőelemét, hogy hozzáférjünk a hibaüzenethez
+      const error = parentElement.querySelector('.error'); // A szülőelemben keresünk egy 'error' osztályú elemet a hibaüzenet megjelenítésére
+      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet az 'error' elemben
+      validation = false; // Ha hibát találtunk, a validáció hamisra változik
+  }
+  return validation; // Visszatérünk a validációs eredménnyel, amely lehet igaz vagy hamis
+}
+
+
 renderTable(); // Táblázat megjelenítése
 
 // Form adatok kezelése (input beolvasás és validálás)
@@ -144,10 +156,7 @@ form.addEventListener('submit', function(e) {
   if(!validate(szerelHtml, errormessage)){ //Megnézi, hogy a validate false-e
     valid = false; // Amennyiben false volt a valid értékét false-ra állítja
   };
-  if(szerel2Value!==undefined && szerel2Value === ""){  //Megnézi, hogy a szerel2Value értéke undefined-e
-    const parentElement = szerel2Html.parentElement; // Megkeressük az szerel2Value input mezőjének szülőelemét
-    const error = parentElement.querySelector('.error'); // Az szerel2Html mező szülőelemében keresünk egy "error" osztályú elemet
-    error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+  if(!validate2(szerel2Html, szerel2Value, errormessage)){  //Megnézi, hogy a szerel2Value értéke undefined-e
     valid = false; // A valid változó értékét hamisra állítjuk
   }
 
