@@ -1,56 +1,67 @@
-const fejlec ={
-  szerzo: "Szerző neve", // Fejléc: Szerző neve
-  kor: "Korszak",     // Fejléc: kor
-  szerel: "Szerelmek"    // Fejléc: szerel
+const fejlec = {
+    szerzo: "Szerző neve", // Fejléc: költő neve
+    kor: "Korszak",        // Fejléc: korszak
+    szerel: "Szerelmek"    // Fejléc: szerelem oszlop
 }
+// Létrehozunk egy tömböt, amely költők adatait tartalmazza
 const tomb = [
   {
-    szerzo: "Balassi Bálint", // Az első sor: Szerző neve
-    kor: "reformáció",     // Az első sor: kor
-    szerel: "Losonczy Anna",  // Az első sor: Első szerelem
-    szerel2: "Dobó Krisztina"  // Az első sor: Második szerelem
+      szerzo: "Balassi Bálint", // Első adat: költő neve
+      kor: "reformáció",        // Első adat: korszak
+      szerel: "Losonczy Anna",  // Első adat: első szerelem
+      szerel2: "Dobó Krisztina" // Első adat: második szerelem
   },
   {
-    szerzo: "Csokonai Vitéz Mihály", // A második sor: Szerző neve
-    kor: "felvilágosodás",        // A második sor: kor
-    szerel: "Vajda Juliána"          // A második sor: Első szerelem (összevont oszlop)
+      szerzo: "Csokonai Vitéz Mihály", // Második adat: költő neve
+      kor: "felvilágosodás",          // Második adat: korszak
+      szerel: "Vajda Juliána"         // Második adat: első szerelem (második nincs megadva)
   },
   {
-    szerzo: "Petőfi Sándor",      // A harmadik sor: Szerző neve
-    kor: "magyar romantika",   // A harmadik sor: kor
-    szerel: "Mednyánszky Berta",  // A harmadik sor: Első szerelem
-    szerel2: "Szendrey Júlia"      // A harmadik sor: Második szerelem
+      szerzo: "Petőfi Sándor",     // Harmadik adat: költő neve
+      kor: "magyar romantika",     // Harmadik adat: korszak
+      szerel: "Mednyánszky Berta", // Harmadik adat: első szerelem
+      szerel2: "Szendrey Júlia"    // Harmadik adat: második szerelem
   },
   {
-    szerzo: "Ady Endre",    // A negyedik sor: Szerző neve
-    kor: "20. század",   // A negyedik sor: kor
-    szerel: "Léda",         // A negyedik sor: Első szerelem
-    szerel2: "Csinszka"      // A negyedik sor: Második szerelem
+      szerzo: "Ady Endre",     // Negyedik adat: költő neve
+      kor: "20. század",       // Negyedik adat: korszak
+      szerel: "Léda",          // Negyedik adat: első szerelem
+      szerel2: "Csinszka"      // Negyedik adat: második szerelem
   }
 ];
 
-const table = document.createElement('table'); // Táblázat létrehozása
-document.body.appendChild(table); // Táblázat hozzáadása a dokumentum törzséhez
-const thead = document.createElement('thead'); // Fejléc rész létrehozása
+// Létrehozzuk a táblázatot
+const table = document.createElement('table'); 
+document.body.appendChild(table); // Táblázat hozzáadása a dokumentumhoz
+
+// Fejléc (thead) létrehozása és hozzáadása a táblázathoz
+const thead = document.createElement('thead');
 table.appendChild(thead); // Fejléc hozzáadása a táblázathoz
-const th_Row = document.createElement('tr'); // Fejléc sor létrehozása
-thead.appendChild(th_Row); // Fejléc sor hozzáadása a fejléc részhez
-const th_szerzo = document.createElement('th'); // Első fejléc cella létrehozása
-th_szerzo.innerHTML = fejlec.szerzo; // Szöveg beállítása az első cellában
-th_Row.appendChild(th_szerzo); // Első fejléc cella hozzáadása a fejléc sorhoz
-const th_kor = document.createElement('th'); // Második fejléc cella létrehozása
-th_kor.innerHTML = fejlec.kor; // Szöveg beállítása a második cellában
-th_Row.appendChild(th_kor); // Második fejléc cella hozzáadása a fejléc sorhoz
 
-const th_szerel = document.createElement('th'); // Harmadik fejléc cella létrehozása
-th_szerel.colSpan = 2; // Cella oszlopainak összevonása
-th_szerel.innerHTML = fejlec.szerel; // Szöveg beállítása a harmadik cellában
-th_Row.appendChild(th_szerel); // Harmadik fejléc cella hozzáadása a fejléc sorhoz
+// Fejléc sor létrehozása
+const th_Row = document.createElement('tr'); 
+thead.appendChild(th_Row); // Fejléc sor hozzáadása a fejléchez
 
-const tbody = document.createElement('tbody'); // Táblázat törzs részének létrehozása
-table.appendChild(tbody); // Törzs hozzáadása a táblázathoz
+// Fejléc oszlopok létrehozása és beállítása
+const th_szerzo = document.createElement('th'); 
+th_szerzo.innerHTML = fejlec.szerzo; // Beállítjuk a költő oszlop fejlécét
+th_Row.appendChild(th_szerzo); // Fejléc oszlop hozzáadása a sorhoz
 
-function renderTable() { // A renderTable függvény létrehozása
+const th_kor = document.createElement('th'); 
+th_kor.innerHTML = fejlec.kor; // Beállítjuk a korszak oszlop fejlécét
+th_Row.appendChild(th_kor); // Fejléc oszlop hozzáadása a sorhoz
+
+const th_szerel = document.createElement('th'); 
+th_szerel.colSpan = 2; // Az utolsó oszlop két oszlopot foglalhat el (ha van második szerelem)
+th_szerel.innerHTML = fejlec.szerel; // Beállítjuk a szerelem oszlop fejlécét
+th_Row.appendChild(th_szerel); // Fejléc oszlop hozzáadása a sorhoz
+
+// Táblázat törzsének létrehozása
+const tbody = document.createElement('tbody');
+table.appendChild(tbody); // Táblázat törzsének hozzáadása a táblázathoz
+
+// Függvény, amely kirajzolja a táblázat adatait
+function renderTable() {
   for (let i = 0; i < tomb.length; i++) { // Végigiterálunk a `tomb` tömb elemein
       const row = document.createElement('tr'); // Új sor létrehozása a táblázathoz
       tbody.appendChild(row); // A létrehozott sort hozzáadjuk a táblázat törzséhez (tbody)
@@ -79,28 +90,67 @@ function renderTable() { // A renderTable függvény létrehozása
   }
 }
 
-renderTable() //Függvény meghívása
 
-const form = document.getElementById('form'); // A form elemet kérjük le az ID alapján
-form.addEventListener('submit', function(e) { // Eseményfigyelőt adunk a submit eseményre
-  e.preventDefault(); // Megakadályozzuk az alapértelmezett form beküldését
-  const szerzoHtml = document.getElementById('kolto_nev'); // Költő nevének input mezője
-  const korHtml = document.getElementById('korszak'); // kor input mezője
-  const szerelHtml = document.getElementById('szerelem1'); // Első szerelem input mezője
-  const szerel2Checkbox = document.getElementById('masodik'); // Második szerelem checkbox
-  const szerel2Html = document.getElementById('szerelem2'); // Második szerelem input mezője
-  const szerzoValue = szerzoHtml.value; // Költő nevének értéke
-  const korValue = korHtml.value; // kor értéke
-  const szerelValue = szerelHtml.value; // Első szerelem értéke
-  const szerel2Value = szerel2Checkbox.checked ? szerel2Html.value : undefined;
+// Táblázat megjelenítése
+renderTable(); 
 
-  const newElement = {
-    szerzo: szerzoValue, // Költő neve
-    kor: korValue, // kor
-    szerel: szerelValue, // Első szerelem
-    szerel2: szerel2Value // Második szerelem
-  };
-  tomb.push(newElement); // Új objektum hozzáadása az tomb-hez
-  tbody.innerHTML = ''; // Táblázat tartalmának törlése
-  renderTable(); // Táblázat újrarenderelése
-  });
+// Form adatok kezelése (input beolvasás és validálás)
+const form = document.getElementById('form');
+form.addEventListener('submit', function(e) {
+  e.preventDefault(); // Alapértelmezett küldés megakadályozása
+
+  // Input mezők lekérése
+  const szerzoHtml = document.getElementById('kolto_nev');
+  const korHtml = document.getElementById('korszak');
+  const szerelHtml = document.getElementById('szerelem1');
+  const szerel2Checkbox = document.getElementById('masodik'); // Checkbox, hogy van-e második szerelem
+  const szerel2Html = document.getElementById('szerelem2');
+
+  // Input mezők értékeinek kinyerése
+  const szerzoValue = szerzoHtml.value; // Költő neve
+  const korValue = korHtml.value; // Korszak
+  const szerelValue = szerelHtml.value; // Első szerelem
+  let szerel2Value = szerel2Checkbox.checked ? szerel2Html.value : undefined; // Második szerelem, ha van
+
+  // Hibaüzenetek törlése az űrlapon
+  const thisForm = e.currentTarget;
+  const errorElements = thisForm.querySelectorAll('.error');
+  for (const i of errorElements) {
+      i.innerHTML = ""; // Hibaüzenetek törlése
+  }
+
+  let valid = true; // Validálás kezdeti állapota
+
+  // Validációs ellenőrzések
+  if (szerzoValue === "") { 
+      const parentElement = szerzoHtml.parentElement;
+      parentElement.querySelector('.error').innerHTML = "Kötelező megadni a költő nevét!"; // Hibás költő név
+      valid = false;
+  }
+  if (korValue === "") { 
+      const parentElement = korHtml.parentElement;
+      parentElement.querySelector('.error').innerHTML = "Kötelező megadni a korszakot!"; // Hibás korszak
+      valid = false;
+  }
+  if (szerelValue === "") { 
+      const parentElement = szerelHtml.parentElement;
+      parentElement.querySelector('.error').innerHTML = "Kötelező megadni az első szerelmét!"; // Hibás első szerelem
+      valid = false;
+  }
+
+  // Ha minden adat megadott, új elemet adunk hozzá a tömbhöz
+  if (valid) {
+      const newElement = {
+          szerzo: szerzoValue,  // Költő neve
+          kor: korValue,        // Korszak
+          szerel: szerelValue, // Első szerelem
+          szerel2: szerel2Value // Második szerelem
+      };
+
+      tomb.push(newElement); // Hozzáadjuk az új adatokat a tömbhöz
+  }
+
+  // Táblázat újrarenderelése
+  tbody.innerHTML = ''; 
+  renderTable(); // Táblázat frissítése
+});
