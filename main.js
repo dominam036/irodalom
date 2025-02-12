@@ -117,6 +117,75 @@ function validate2(inputElement, inputElementValue, errormessage) { // Függvén
 
 renderTable(tomb); // Táblázat megjelenítése
 
+function generateForm() {  // Függvény létrehozása, amely létrehozza és hozzáadja az űrlapot az oldalhoz
+  const form = document.createElement('form'); // Létrehoz egy új <form> elemet
+  form.id = 'form'; // Beállítja az űrlap egyedi ID-ját, hogy később könnyen hivatkozhassunk rá
+  form.action = '#'; // Beállítja az űrlap action attribútumát, amely azt jelzi, hogy hová küldjük el az adatokat (itt a # azt jelzi, hogy nem küldjük el)
+  
+  const formt = [ // Az űrlap mezőinek adatstruktúrája: minden mező egy objektum, amely tartalmazza a címkét (label), az id-t és a nevét (name)
+    { 
+        label: 'Költő neve:',            // Az űrlapmező címkéje: "Költő neve"
+        id: 'kolto_nev',                 // A mező egyedi azonosítója
+        name: 'kolto_nev'                // A mező neve, amely a kódon belül is használható
+    },  
+    { 
+        label: 'Korszak:',               // Az űrlapmező címkéje: "Korszak"
+        id: 'korszak',                   // A mező egyedi azonosítója
+        name: 'korszak'                  // A mező neve, amely a kódon belül is használható
+    },  
+    { 
+        label: 'Szerelme:',              // Az űrlapmező címkéje: "Szerelme"
+        id: 'szerelem1',                 // A mező egyedi azonosítója
+        name: 'szerelem1'                // A mező neve, amely a kódon belül is használható
+    },  
+    { 
+        label: 'Volt másik szerelme?',   // Az űrlapmező címkéje: "Volt másik szerelme?"
+        id: 'masodik',                   // A mező egyedi azonosítója
+        name: 'masodik',                 // A mező neve, amely a kódon belül is használható
+        type: 'checkbox'                 // Checkbox mező, amely logikai értéket tárol (true/false)
+    },  
+    { 
+        label: 'Szerelme:',              // Az űrlapmező címkéje: "Szerelme"
+        id: 'szerelem2',                 // A mező egyedi azonosítója
+        name: 'szerelem2'                // A mező neve, amely a kódon belül is használható
+    }
+  ];
+
+  // Iterálunk a formt tömb minden egyes elemén (mezőjén)
+  for (const i of formt) {
+      const fieldDiv = document.createElement('div'); // Létrehoz egy új <div> elemet, amely tartalmazza az input mezőt
+      fieldDiv.className = 'field'; // Beállítja a div osztályát, hogy stílusokat rendeljen hozzá
+      const label = document.createElement('label'); // Létrehoz egy <label> elemet
+      label.htmlFor = i.id; // A label-t összekapcsolja az input mezővel az id alapján
+      label.textContent = fo.label; // A label szövegét beállítja
+      fieldDiv.appendChild(label); // Hozzáadja a label-t a mező div-hez
+      fieldDiv.appendChild(document.createElement('br')); // Sortörést ad hozzá a div-hez, hogy az input mező és a címke ne legyenek egy sorban
+
+      const input = document.createElement('input'); // Létrehoz egy új <input> elemet
+      input.type = i.type || 'text'; // Beállítja az input típusát (alapértelmezett típus 'text', ha a mező nem checkbox, akkor 'text')
+      input.id = i.id; // Beállítja az input mező ID-ját
+      input.name = i.name; // Beállítja az input mező nevét
+      fieldDiv.appendChild(input); // Hozzáadja az input mezőt a div-hez
+      fieldDiv.appendChild(document.createElement('br')); // Sortörést ad hozzá az input mező után
+
+      const errorDiv = document.createElement('div'); // Létrehoz egy új div-et, amely tárolni fogja a hibaüzeneteket
+      errorDiv.className = 'error'; // Beállítja a div osztályát 'error' névre, hogy stílusozni lehessen
+      fieldDiv.appendChild(errorDiv); // Hozzáadja a hibát tartalmazó div-et a mező div-hez
+
+      form.appendChild(fieldDiv); // Hozzáadja a mezőt tartalmazó div-et az űrlaphoz
+  }
+  
+  const button = document.createElement('button'); // Létrehoz egy új gombot
+  button.type = 'submit'; // Beállítja a gomb típusát 'submit'-ra, hogy elküldje az űrlapot
+  button.textContent = 'Hozzáadás'; // Beállítja a gomb szövegét
+  form.appendChild(button); // Hozzáadja a gombot az űrlaphoz
+  
+  document.body.appendChild(form); // Hozzáadja az űrlapot a dokumentum body-jához, így az megjelenik az oldalon
+}
+
+generateForm(); // A függvény meghívása, hogy az űrlap megjelenjen
+
+
 // Form adatok kezelése (input beolvasás és validálás)
 const form = document.getElementById('form');
 form.addEventListener('submit', function(e) {
