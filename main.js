@@ -1,7 +1,7 @@
-const fejlec = {
-    szerzo: "Szerző neve", // Fejléc: költő neve
-    kor: "Korszak",        // Fejléc: korszak
-    szerel: "Szerelmek"    // Fejléc: szerelem oszlop
+const fejlec =   {
+  szerzo: "Szerző neve", // Fejléc: szerző neve
+  kor: "Korszak",        // Fejléc: korszak
+  szerel: "Szerelmek"    // Fejléc: szerelmek oszlop
 }
 // Létrehozunk egy tömböt, amely költők adatait tartalmazza
 const tomb = [
@@ -36,29 +36,29 @@ document.body.appendChild(table); // Táblázat hozzáadása a dokumentumhoz
 
 // Fejléc (thead) létrehozása és hozzáadása a táblázathoz
 const thead = document.createElement('thead');
-table.appendChild(thead); // Fejléc hozzáadása a táblázathoz
+table.appendChild(thead);
 
 // Fejléc sor létrehozása
 const th_Row = document.createElement('tr'); 
-thead.appendChild(th_Row); // Fejléc sor hozzáadása a fejléchez
+thead.appendChild(th_Row);
 
 // Fejléc oszlopok létrehozása és beállítása
 const th_szerzo = document.createElement('th'); 
-th_szerzo.innerHTML = fejlec.szerzo; // Beállítjuk a költő oszlop fejlécét
-th_Row.appendChild(th_szerzo); // Fejléc oszlop hozzáadása a sorhoz
+th_szerzo.innerHTML = fejlec.szerzo; // Beállítjuk a szerző oszlop fejlécét
+th_Row.appendChild(th_szerzo); 
 
 const th_kor = document.createElement('th'); 
 th_kor.innerHTML = fejlec.kor; // Beállítjuk a korszak oszlop fejlécét
-th_Row.appendChild(th_kor); // Fejléc oszlop hozzáadása a sorhoz
+th_Row.appendChild(th_kor);
 
 const th_szerel = document.createElement('th'); 
 th_szerel.colSpan = 2; // Az utolsó oszlop két oszlopot foglalhat el (ha van második szerelem)
-th_szerel.innerHTML = fejlec.szerel; // Beállítjuk a szerelem oszlop fejlécét
-th_Row.appendChild(th_szerel); // Fejléc oszlop hozzáadása a sorhoz
+th_szerel.innerHTML = fejlec.szerel; // Beállítjuk a szerelmek oszlop fejlécét
+th_Row.appendChild(th_szerel);
 
 // Táblázat törzsének létrehozása
 const tbody = document.createElement('tbody');
-table.appendChild(tbody); // Táblázat törzsének hozzáadása a táblázathoz
+table.appendChild(tbody);
 
 // Függvény, amely kirajzolja a táblázat adatait
 function renderTable() {
@@ -91,8 +91,18 @@ function renderTable() {
 }
 
 
-// Táblázat megjelenítése
-renderTable(); 
+function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
+  let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
+  if(inputElement.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
+      const parentElement = inputElement.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
+      const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
+      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+      validation = false; // A valid változó értékét hamisra állítjuk
+  }
+  return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
+}
+
+renderTable(); // Táblázat megjelenítése
 
 // Form adatok kezelése (input beolvasás és validálás)
 const form = document.getElementById('form');
@@ -107,44 +117,41 @@ form.addEventListener('submit', function(e) {
   const szerel2Html = document.getElementById('szerelem2');
 
   // Input mezők értékeinek kinyerése
-  const szerzoValue = szerzoHtml.value; // Költő neve
-  const korValue = korHtml.value; // Korszak
-  const szerelValue = szerelHtml.value; // Első szerelem
-  let szerel2Value = szerel2Checkbox.checked ? szerel2Html.value : undefined; // Második szerelem, ha van
+  const szerzoValue = szerzoHtml.value;
+  const korValue = korHtml.value;
+  const szerelValue = szerelHtml.value;
+  let szerel2Value = szerel2Checkbox.checked ? szerel2Html.value : undefined;
+
+  // Errorüzenet megadása
+  const errormessage = "Kötelező megadni a költő nevét!"
 
   // Hibaüzenetek törlése az űrlapon
   const thisForm = e.currentTarget;
   const errorElements = thisForm.querySelectorAll('.error');
   for (const i of errorElements) {
-      i.innerHTML = ""; // Hibaüzenetek törlése
+      i.innerHTML = "";
   }
 
   let valid = true; // Validálás kezdeti állapota
 
   // Validációs ellenőrzések
-  if (szerzoValue === "") { 
-      const parentElement = szerzoHtml.parentElement;
-      parentElement.querySelector('.error').innerHTML = "Kötelező megadni a költő nevét!"; // Hibás költő név
-      valid = false;
-  }
-  if (korValue === "") { 
-      const parentElement = korHtml.parentElement;
-      parentElement.querySelector('.error').innerHTML = "Kötelező megadni a korszakot!"; // Hibás korszak
-      valid = false;
-  }
-  if (szerelValue === "") { 
-      const parentElement = szerelHtml.parentElement;
-      parentElement.querySelector('.error').innerHTML = "Kötelező megadni az első szerelmét!"; // Hibás első szerelem
-      valid = false;
-  }
+  if(!validate(szerzoHtml, errormessage)){ //Megnézi, hogy a validate false-e
+    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
+  };
+  if(!validate(korHtml, errormessage)){ //Megnézi, hogy a validate false-e
+    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
+  };
+  if(!validate(szerelHtml, errormessage)){ //Megnézi, hogy a validate false-e
+    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
+  };
 
   // Ha minden adat megadott, új elemet adunk hozzá a tömbhöz
   if (valid) {
       const newElement = {
-          szerzo: szerzoValue,  // Költő neve
-          kor: korValue,        // Korszak
-          szerel: szerelValue, // Első szerelem
-          szerel2: szerel2Value // Második szerelem
+          szerzo: szerzoValue,
+          kor: korValue,
+          szerel: szerelValue,
+          szerel2: szerel2Value
       };
 
       tomb.push(newElement); // Hozzáadjuk az új adatokat a tömbhöz
@@ -152,5 +159,5 @@ form.addEventListener('submit', function(e) {
 
   // Táblázat újrarenderelése
   tbody.innerHTML = ''; 
-  renderTable(); // Táblázat frissítése
+  renderTable();
 });
