@@ -29,6 +29,9 @@ const tomb = [
 const table = document.createElement('table'); 
 document.body.appendChild(table); // Táblázat hozzáadása a dokumentumhoz
 
+/**
+ * a fejléc legenerálása
+ */
 function fejlecGen() {
   const fejlec =   {
     szerzo: "Szerző neve", // Fejléc: szerző neve
@@ -61,6 +64,10 @@ const tbody = document.createElement('tbody');
 table.appendChild(tbody);
 
 // Függvény, amely kirajzolja a táblázat adatait
+/**
+ * a table legenerálása
+ * @param {Array} tomb 
+ */
 function renderTable(tomb) {
   fejlecGen();
   for (let i = 0; i < tomb.length; i++) { // Végigiterálunk a `tomb` tömb elemein
@@ -91,7 +98,12 @@ function renderTable(tomb) {
   }
 }
 
-
+/**
+ * 
+ * @param {HTMLElement} inputElement 
+ * @param {String} errormessage 
+ * @returns 
+ */
 function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
   let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
   if(inputElement.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
@@ -103,6 +115,13 @@ function validate(inputElement, errormessage){ // Függvény létrehozésa két 
   return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
 }
 
+/**
+ * Az elem validálása a value-ja alapján
+ * @param {HTMLElement} inputElement 
+ * @param {String} inputElementValue 
+ * @param {String} errormessage 
+ * @returns 
+ */
 function validate2(inputElement, inputElementValue, errormessage) { // Függvény, amely validálja az input mezőt és hibaüzenetet jelenít meg
   let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
   if (inputElementValue === "" && inputElementValue !== undefined) { // Ellenőrizzük, hogy az input mező értéke üres-e, és nem undefined
@@ -117,6 +136,9 @@ function validate2(inputElement, inputElementValue, errormessage) { // Függvén
 
 renderTable(tomb); // Táblázat megjelenítése
 
+/**
+ * a form legenerálása
+ */
 function generateForm() {  // Függvény létrehozása, amely létrehozza és hozzáadja az űrlapot az oldalhoz
   const form = document.createElement('form'); // Létrehoz egy új <form> elemet
   form.id = 'form'; // Beállítja az űrlap egyedi ID-ját, hogy később könnyen hivatkozhassunk rá
