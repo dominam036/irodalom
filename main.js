@@ -1,8 +1,3 @@
-const fejlec =   {
-  szerzo: "Szerző neve", // Fejléc: szerző neve
-  kor: "Korszak",        // Fejléc: korszak
-  szerel: "Szerelmek"    // Fejléc: szerelmek oszlop
-}
 // Létrehozunk egy tömböt, amely költők adatait tartalmazza
 const tomb = [
   {
@@ -35,6 +30,11 @@ const table = document.createElement('table');
 document.body.appendChild(table); // Táblázat hozzáadása a dokumentumhoz
 
 function fejlecGen() {
+  const fejlec =   {
+    szerzo: "Szerző neve", // Fejléc: szerző neve
+    kor: "Korszak",        // Fejléc: korszak
+    szerel: "Szerelmek"    // Fejléc: szerelmek oszlop
+  }
   // Fejléc (thead) létrehozása és hozzáadása a táblázathoz
   const thead = document.createElement('thead');
   table.appendChild(thead);
@@ -42,16 +42,13 @@ function fejlecGen() {
   // Fejléc sor létrehozása
   const th_Row = document.createElement('tr'); 
   thead.appendChild(th_Row);
-  
+
   let counter = 0;
-  const fejlecValues = Object.values(fejlec); // Az objektum értékeinek lekérése tömb formájában
-  
-  for (const value of fejlecValues) { // Végigmegyünk a fejléc értékein
-    const th = document.createElement('th'); // Létrehozunk egy új fejléc cellát
-    th.innerHTML = value; // Beállítjuk a cella szövegét
-    th_Row.appendChild(th); // Hozzáadjuk a cellát a fejléc sorához
+  for(const i in fejlec){ // Iterálás a fejlec objektumon
+    const th = document.createElement('th'); // Th elem létrehozása
+    th.innerHTML = fejlec[i]; // A th elem szövegének beállítása
+    th_Row.appendChild(th); // Th hozzáadása a tr-hez
     counter++;
-    
     // Ha elértük a harmadik oszlopot, a szerelmek oszlophoz colSpan értéket adunk
     if (counter === 3) {
       th.colSpan = 2; // A harmadik oszlopot kétszeres szélességűre állítjuk
@@ -64,7 +61,7 @@ const tbody = document.createElement('tbody');
 table.appendChild(tbody);
 
 // Függvény, amely kirajzolja a táblázat adatait
-function renderTable() {
+function renderTable(tomb) {
   fejlecGen();
   for (let i = 0; i < tomb.length; i++) { // Végigiterálunk a `tomb` tömb elemein
       const row = document.createElement('tr'); // Új sor létrehozása a táblázathoz
@@ -118,7 +115,7 @@ function validate2(inputElement, inputElementValue, errormessage) { // Függvén
 }
 
 
-renderTable(); // Táblázat megjelenítése
+renderTable(tomb); // Táblázat megjelenítése
 
 // Form adatok kezelése (input beolvasás és validálás)
 const form = document.getElementById('form');
@@ -178,5 +175,5 @@ form.addEventListener('submit', function(e) {
 
   // Táblázat újrarenderelése
   tbody.innerHTML = ''; 
-  renderTable();
+  renderTable(tomb);
 });
