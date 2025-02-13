@@ -35,15 +35,22 @@ renderTable(tomb); // Táblázat megjelenítése
 const form = generateForm(); // A függvény meghívása, hogy az űrlap megjelenjen és a form változó értékadása
 form.addEventListener('submit', function(e) {
   e.preventDefault(); // Alapértelmezett küldés megakadályozása
-
+  let valid = true;
   // Input mezők lekérése
   const mezok = {
     szerzo: document.getElementById('kolto_nev'),
     kor: document.getElementById('korszak'),
-    szerelem: document.getElementById('szerelem1'),
-    szerel2: document.getElementById('szerelem2'),
-    szerel2Checkbox: document.getElementById('masodik')
   };
+
+  
+    const mezok2 = {
+      szerelCheckbox : document.getElementById('masodik'),
+      szerelem : [
+        document.getElementById('szerelem1'),
+        document.getElementById('szerelem2')
+      ]
+    };
+  
 
   // Errorüzenet megadása
   const errormessage = "Kötelező megadni a költő nevét!"
@@ -56,17 +63,21 @@ form.addEventListener('submit', function(e) {
   }
 
   // Validációs ellenőrzések
-  let valid = ['szerzo', 'kor', 'szerelem'].every(mező => validate(mezok[mező], hibaUzenet));
-  const szerel2Value = mezok.szerel2Checkbox.checked ? mezok.szerel2.value : undefined;
-  valid = valid && validate2(mezok.szerel2, szerel2Value, hibaUzenet);
+  /*
+  valid = validate(mezok, errormessage);
+  const szerel2Value = mezok2.szerelCheckbox.checked ? mezok.szerel2.value : undefined;
+  valid = valid && validate2(mezok2, szerel2Value, errormessage);
+  */
+
+
 
   // Ha minden adat megadott, új elemet adunk hozzá a tömbhöz
-  if (valid) {
+  if(valid) {
       const newElement = {
-          szerzo: szerzoValue,
-          kor: korValue,
-          szerel: szerelValue,
-          szerel2: szerel2Value
+          szerzo: mezok.szerzo.value,
+          kor: mezok.kor.value,
+          szerel: mezok2.szerelem[1].value,
+          szerel2: mezok2.szerelem[2].value
       };
 
       tomb.push(newElement); // Hozzáadjuk az új adatokat a tömbhöz

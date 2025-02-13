@@ -47,15 +47,22 @@ function addDivElement(elementType, className, parent){
  * @param {String} elementType ami az elem típusának a neve (pl:"td", "th")
  * @param {String} contain 
  * @param {HTMLElement} parent 
+ * @param {Number} span 1 = colspan, 2 = rowspan
+ * @param {Number} spanLength a colspan / rowspan értéke
  */
-function addElement(elementType, contain, parent){
+function addElement(elementType, contain, parent, span = 1, spanLength = 2){
   if(contain != undefined){
     const temp = document.createElement(elementType); // Létrehozunk egy cellát
     temp.innerHTML = contain; // Beállítjuk a cella tartalmát az aktuális értékre
     parent.appendChild(temp); // A cellát hozzáadjuk a parent-hez
   }
   else{
-    parent.lastChild.colSpan = 2;
+    if(span == 1){
+      parent.lastChild.colSpan = spanLength;
+    }
+    else if(span == 2){
+      parent.lastChild.rowSpan = spanLength;
+    }
   }
 }
 
@@ -107,38 +114,50 @@ function renderTable(tomb) {
   
         addElement('td', tomb[i].kor, row);
   
-        addElement('td', tomb[i].szerel, row);
-
-        addElement('td', tomb[i].szerel2, row);
+        if(tomb[i].szerel == "" && tomb[i].szerel2 == ""){
+          addElement('td', "-", row)
+        }
+        else{
+          addElement('td', tomb[i].szerel, row)
+          addElement('td', tomb[i].szerel2, row)
+        }
     }
 }
   
 /**
 * 
-* @param {HTMLElement} inputElement 
+* @param {Object} inputElement 
 * @param {String} errormessage 
 * @returns hogy az elem valid-e
 */
 function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
   let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
-  if(inputElement.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
-      const parentElement = inputElement.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
-      const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
-      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
-      validation = false; // A valid változó értékét hamisra állítjuk
-  }
+  Object.keys(inputElement).every(element => {if(element.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
+        const parentElement = element.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
+        const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
+        error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+        validation = false; // A valid változó értékét hamisra állítjuk
+    }})
   return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
 }
   
   /**
    * Az elem validálása a value-ja alapján
-   * @param {HTMLElement} inputElement 
+   * @param {Object} inputElement 
    * @param {String} inputElementValue 
    * @param {String} errormessage 
    * @returns hogy az elem valid-e
    */
   function validate2(inputElement, inputElementValue, errormessage) { // Függvény, amely validálja az input mezőt és hibaüzenetet jelenít meg
     let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
+    Object.keys(inputElement).every(element => {
+      if(element.checked){ // Ellenőrizzük, hogy az input mező üres-e
+      const parentElement = element.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
+      const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
+      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+      validation = false; // A valid változó értékét hamisra állítjuk
+  }})
+    
     if (inputElementValue === "" && inputElementValue !== undefined) { // Ellenőrizzük, hogy az input mező értéke üres-e, és nem undefined
         const parentElement = inputElement.parentElement; // Megkeressük az input mező szülőelemét, hogy hozzáférjünk a hibaüzenethez
         const error = parentElement.querySelector('.error'); // A szülőelemben keresünk egy 'error' osztályú elemet a hibaüzenet megjelenítésére
@@ -147,6 +166,8 @@ function validate(inputElement, errormessage){ // Függvény létrehozésa két 
     }
     return validation; // Visszatérünk a validációs eredménnyel, amely lehet igaz vagy hamis
   }
+
+
 /**
  * a form legenerálása
  */
@@ -167,11 +188,6 @@ function generateForm() {  // Függvény létrehozása, amely létrehozza és ho
           name: 'korszak'                  // A mező neve, amely a kódon belül is használható
       },  
       { 
-          label: 'Szerelme:',              // Az űrlapmező címkéje: "Szerelme"
-          id: 'szerelem1',                 // A mező egyedi azonosítója
-          name: 'szerelem1'                // A mező neve, amely a kódon belül is használható
-      },  
-      { 
           label: 'Volt másik szerelme?',   // Az űrlapmező címkéje: "Volt másik szerelme?"
           id: 'masodik',                   // A mező egyedi azonosítója
           name: 'masodik',                 // A mező neve, amely a kódon belül is használható
@@ -181,6 +197,11 @@ function generateForm() {  // Függvény létrehozása, amely létrehozza és ho
           label: 'Szerelme:',              // Az űrlapmező címkéje: "Szerelme"
           id: 'szerelem2',                 // A mező egyedi azonosítója
           name: 'szerelem2'                // A mező neve, amely a kódon belül is használható
+      },  
+      { 
+          label: 'Szerelme:',              // Az űrlapmező címkéje: "Szerelme"
+          id: 'szerelem1',                 // A mező egyedi azonosítója
+          name: 'szerelem1'                // A mező neve, amely a kódon belül is használható
       }
     ];
   
