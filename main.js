@@ -37,17 +37,13 @@ form.addEventListener('submit', function(e) {
   e.preventDefault(); // Alapértelmezett küldés megakadályozása
 
   // Input mezők lekérése
-  const szerzoHtml = document.getElementById('kolto_nev');
-  const korHtml = document.getElementById('korszak');
-  const szerelHtml = document.getElementById('szerelem1');
-  const szerel2Checkbox = document.getElementById('masodik'); // Checkbox, hogy van-e második szerelem
-  const szerel2Html = document.getElementById('szerelem2');
-
-  // Input mezők értékeinek kinyerése
-  const szerzoValue = szerzoHtml.value;
-  const korValue = korHtml.value;
-  const szerelValue = szerelHtml.value;
-  let szerel2Value = szerel2Checkbox.checked ? szerel2Html.value : undefined;
+  const mezok = {
+    szerzo: document.getElementById('kolto_nev'),
+    kor: document.getElementById('korszak'),
+    szerelem: document.getElementById('szerelem1'),
+    szerel2: document.getElementById('szerelem2'),
+    szerel2Checkbox: document.getElementById('masodik')
+  };
 
   // Errorüzenet megadása
   const errormessage = "Kötelező megadni a költő nevét!"
@@ -59,21 +55,10 @@ form.addEventListener('submit', function(e) {
       i.innerHTML = "";
   }
 
-  let valid = true; // Validálás kezdeti állapota
-
   // Validációs ellenőrzések
-  if(!validate(szerzoHtml, errormessage)){ //Megnézi, hogy a validate false-e
-    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
-  };
-  if(!validate(korHtml, errormessage)){ //Megnézi, hogy a validate false-e
-    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
-  };
-  if(!validate(szerelHtml, errormessage)){ //Megnézi, hogy a validate false-e
-    valid = false; // Amennyiben false volt a valid értékét false-ra állítja
-  };
-  if(!validate2(szerel2Html, szerel2Value, errormessage)){  //Megnézi, hogy a szerel2Value értéke undefined-e
-    valid = false; // A valid változó értékét hamisra állítjuk
-  }
+  let valid = ['szerzo', 'kor', 'szerelem'].every(mező => validate(mezok[mező], hibaUzenet));
+  const szerel2Value = mezok.szerel2Checkbox.checked ? mezok.szerel2.value : undefined;
+  valid = valid && validate2(mezok.szerel2, szerel2Value, hibaUzenet);
 
   // Ha minden adat megadott, új elemet adunk hozzá a tömbhöz
   if (valid) {

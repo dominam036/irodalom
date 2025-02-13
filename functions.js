@@ -1,4 +1,65 @@
 /**
+ * label elem legenerálása, szövegének megadása és hozzáadása a parent-hez
+ * @param {String} elementType ami az elem típusának a neve (pl:"td", "th")
+ * @param {HTMLElement} parent 
+ * @param {String} id 
+ * @param {String} label 
+ */
+function addLabelElement(elementType, parent, id, label){
+  const temp = document.createElement(elementType);
+  temp.htmlFor = id;
+  temp.textContent = label;
+  parent.appendChild(temp);
+  parent.appendChild(document.createElement('br'));
+}
+
+/**
+ * input elem legenerálása és hozzáadása a parent-hez
+ * @param {String} elementType ami az elem típusának a neve (pl:"td", "th")
+ * @param {HTMLElement} parent 
+ * @param {String} id 
+ * @param {String} type 
+ * @param {String} name 
+ */
+function addInputElement(elementType, parent, id, type, name){
+  const temp = document.createElement(elementType);
+  temp.type = type || 'text';
+  temp.id = id;
+  temp.name = name;
+  parent.appendChild(temp);
+  parent.appendChild(document.createElement('br'));
+}
+
+/**
+ * létrehoz egy elemet, értéket ad neki és hozzáadja a parent-hez
+ * @param {String} elementType ami az elem típusának a neve (pl:"td", "th")
+ * @param {String} className 
+ * @param {HTMLElement} parent 
+ */
+function addDivElement(elementType, className, parent){
+  const temp = document.createElement(elementType); // Létrehozunk egy cellát
+  temp.className = className; // Beállítjuk a cella tartalmát az aktuális értékre
+  parent.appendChild(temp); // A cellát hozzáadjuk a parent-hez
+}
+
+/**
+ * létrehoz egy elemet, értéket ad neki és hozzáadja a parent-hez
+ * @param {String} elementType ami az elem típusának a neve (pl:"td", "th")
+ * @param {String} contain 
+ * @param {HTMLElement} parent 
+ */
+function addElement(elementType, contain, parent){
+  if(contain != undefined){
+    const temp = document.createElement(elementType); // Létrehozunk egy cellát
+    temp.innerHTML = contain; // Beállítjuk a cella tartalmát az aktuális értékre
+    parent.appendChild(temp); // A cellát hozzáadjuk a parent-hez
+  }
+  else{
+    parent.lastChild.colSpan = 2;
+  }
+}
+
+/**
  * a fejléc legenerálása
  */
 function fejlecGen() {
@@ -41,28 +102,14 @@ function renderTable(tomb) {
     for (let i = 0; i < tomb.length; i++) { // Végigiterálunk a `tomb` tömb elemein
         const row = document.createElement('tr'); // Új sor létrehozása a táblázathoz
         tbody.appendChild(row); // A létrehozott sort hozzáadjuk a táblázat törzséhez (tbody)
+
+        addElement('td', tomb[i].szerzo, row);
   
-        const szerzo = document.createElement('td'); // Létrehozunk egy cellát a szerző nevének
-        szerzo.innerHTML = tomb[i].szerzo; // Beállítjuk a cella tartalmát az aktuális szerző nevére
-        row.appendChild(szerzo); // A cellát hozzáadjuk a sorhoz
+        addElement('td', tomb[i].kor, row);
   
-        const kor = document.createElement('td'); // Létrehozunk egy cellát a korszak számára
-        kor.innerHTML = tomb[i].kor; // Beállítjuk a cella tartalmát az aktuális korszak nevére
-        row.appendChild(kor); // A cellát hozzáadjuk a sorhoz
-  
-        const szerel = document.createElement('td'); // Létrehozunk egy cellát az első szerelem számára
-        szerel.innerHTML = tomb[i].szerel; // Beállítjuk a cella tartalmát az aktuális első szerelem nevére
-  
-        if (!tomb[i].szerel2) { // Ha az adott szerzőnek nincs második szerelme (szerel2 értéke undefined, null vagy üres)
-            szerel.colSpan = 2; // Az első szerelem cellája két oszlopnyi helyet foglaljon el
-            row.appendChild(szerel); // A cellát hozzáadjuk a sorhoz
-        } else { // Ha van második szerelem is
-            row.appendChild(szerel); // Az első szerelem celláját hozzáadjuk a sorhoz
-  
-            const szerel2 = document.createElement('td'); // Létrehozunk egy cellát a második szerelem számára
-            szerel2.innerHTML = tomb[i].szerel2; // Beállítjuk a cella tartalmát a második szerelem nevére
-            row.appendChild(szerel2); // A második szerelem celláját hozzáadjuk a sorhoz
-        }
+        addElement('td', tomb[i].szerel, row);
+
+        addElement('td', tomb[i].szerel2, row);
     }
 }
   
@@ -72,16 +119,16 @@ function renderTable(tomb) {
 * @param {String} errormessage 
 * @returns hogy az elem valid-e
 */
-  function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
-    let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
-    if(inputElement.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
-        const parentElement = inputElement.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
-        const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
-        error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
-        validation = false; // A valid változó értékét hamisra állítjuk
-    }
-    return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
+function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
+  let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
+  if(inputElement.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
+      const parentElement = inputElement.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
+      const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
+      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
+      validation = false; // A valid változó értékét hamisra állítjuk
   }
+  return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
+}
   
   /**
    * Az elem validálása a value-ja alapján
@@ -141,22 +188,11 @@ function generateForm() {  // Függvény létrehozása, amely létrehozza és ho
     for (const i of formt) {
         const fieldDiv = document.createElement('div'); // Létrehoz egy új <div> elemet, amely tartalmazza az input mezőt
         fieldDiv.className = 'field'; // Beállítja a div osztályát, hogy stílusokat rendeljen hozzá
-        const label = document.createElement('label'); // Létrehoz egy <label> elemet
-        label.htmlFor = i.id; // A label-t összekapcsolja az input mezővel az id alapján
-        label.textContent = i.label; // A label szövegét beállítja
-        fieldDiv.appendChild(label); // Hozzáadja a label-t a mező div-hez
-        fieldDiv.appendChild(document.createElement('br')); // Sortörést ad hozzá a div-hez, hogy az input mező és a címke ne legyenek egy sorban
-  
-        const input = document.createElement('input'); // Létrehoz egy új <input> elemet
-        input.type = i.type || 'text'; // Beállítja az input típusát (alapértelmezett típus 'text', ha a mező nem checkbox, akkor 'text')
-        input.id = i.id; // Beállítja az input mező ID-ját
-        input.name = i.name; // Beállítja az input mező nevét
-        fieldDiv.appendChild(input); // Hozzáadja az input mezőt a div-hez
-        fieldDiv.appendChild(document.createElement('br')); // Sortörést ad hozzá az input mező után
-  
-        const errorDiv = document.createElement('div'); // Létrehoz egy új div-et, amely tárolni fogja a hibaüzeneteket
-        errorDiv.className = 'error'; // Beállítja a div osztályát 'error' névre, hogy stílusozni lehessen
-        fieldDiv.appendChild(errorDiv); // Hozzáadja a hibát tartalmazó div-et a mező div-hez
+        addLabelElement('label', fieldDiv, i.id, i.label);
+
+        addInputElement('input', fieldDiv, i.id, i.type, i.name);
+
+        addDivElement('div', 'error', fieldDiv);
   
         form.appendChild(fieldDiv); // Hozzáadja a mezőt tartalmazó div-et az űrlaphoz
     }
