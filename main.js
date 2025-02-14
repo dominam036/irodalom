@@ -44,8 +44,8 @@ form.addEventListener('submit', function(e) {
 
   
     const mezok2 = {
-      szerelCheckbox : document.getElementById('masodik'),
-      szerelem : [
+      check : document.getElementById('masodik'),
+      list : [
         document.getElementById('szerelem1'),
         document.getElementById('szerelem2')
       ]
@@ -62,12 +62,8 @@ form.addEventListener('submit', function(e) {
       i.innerHTML = "";
   }
 
-  // Validációs ellenőrzések
-  /*
-  valid = validate(mezok, errormessage);
-  const szerel2Value = mezok2.szerelCheckbox.checked ? mezok.szerel2.value : undefined;
-  valid = valid && validate2(mezok2, szerel2Value, errormessage);
-  */
+  valid = validate(mezok, errormessage) 
+  valid = valid && validate2(mezok2, errormessage);
 
 
 
@@ -76,8 +72,8 @@ form.addEventListener('submit', function(e) {
       const newElement = {
           szerzo: mezok.szerzo.value,
           kor: mezok.kor.value,
-          szerel: mezok2.szerelem[1].value,
-          szerel2: mezok2.szerelem[2].value
+          szerel: mezok2.list[0].value,
+          szerel2: mezok2.list[1].value
       };
 
       tomb.push(newElement); // Hozzáadjuk az új adatokat a tömbhöz

@@ -50,18 +50,16 @@ function addDivElement(elementType, className, parent){
  * @param {Number} span 1 = colspan, 2 = rowspan
  * @param {Number} spanLength a colspan / rowspan értéke
  */
-function addElement(elementType, contain, parent, span = 1, spanLength = 2){
+function addElement(elementType, contain, parent, span = 1, spanLength = 1){
   if(contain != undefined){
     const temp = document.createElement(elementType); // Létrehozunk egy cellát
     temp.innerHTML = contain; // Beállítjuk a cella tartalmát az aktuális értékre
     parent.appendChild(temp); // A cellát hozzáadjuk a parent-hez
-  }
-  else{
     if(span == 1){
-      parent.lastChild.colSpan = spanLength;
+      temp.colSpan = spanLength;
     }
     else if(span == 2){
-      parent.lastChild.rowSpan = spanLength;
+      temp.rowSpan = spanLength;
     }
   }
 }
@@ -115,11 +113,16 @@ function renderTable(tomb) {
         addElement('td', tomb[i].kor, row);
   
         if(tomb[i].szerel == "" && tomb[i].szerel2 == ""){
-          addElement('td', "-", row)
+          addElement('td', "-", row, 1, 2)
         }
         else{
-          addElement('td', tomb[i].szerel, row)
-          addElement('td', tomb[i].szerel2, row)
+          if(tomb[i].szerel2){
+            addElement('td', tomb[i].szerel, row)
+            addElement('td', tomb[i].szerel2, row)
+          }
+          else{
+            addElement('td', tomb[i].szerel, row, 1, 2)
+          }
         }
     }
 }
@@ -130,41 +133,46 @@ function renderTable(tomb) {
 * @param {String} errormessage 
 * @returns hogy az elem valid-e
 */
-function validate(inputElement, errormessage){ // Függvény létrehozésa két bemeneti értékkel
-  let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
-  Object.keys(inputElement).every(element => {if(element.value === ""){ // Ellenőrizzük, hogy az input mező üres-e
-        const parentElement = element.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
-        const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
-        error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
-        validation = false; // A valid változó értékét hamisra állítjuk
-    }})
-  return validation;  //Vissaztér a validation értékével, ami igaz vagy hamis lehet
+function validate(inputElements, errormessage) {
+  let validation = true;
+
+  Object.values(inputElements).forEach(element => {
+    if (element === undefined || element.value === "") {  // Ellenőrizzük, hogy létezik-e és üres-e
+      const parentElement = element.parentElement;
+      const error = parentElement.querySelector('.error');
+      error.innerHTML = errormessage;
+      validation = false;
+    }
+  });
+
+  return validation;
 }
+
   
   /**
    * Az elem validálása a value-ja alapján
-   * @param {Object} inputElement 
-   * @param {String} inputElementValue 
+   * @param {Object{boolean, list}} object 
    * @param {String} errormessage 
    * @returns hogy az elem valid-e
    */
-  function validate2(inputElement, inputElementValue, errormessage) { // Függvény, amely validálja az input mezőt és hibaüzenetet jelenít meg
-    let validation = true; // Kezdőértékként igazra állítjuk a validációs változót
-    Object.keys(inputElement).every(element => {
-      if(element.checked){ // Ellenőrizzük, hogy az input mező üres-e
-      const parentElement = element.parentElement; // Megkeressük az évszám input mezőjének szülőelemét
-      const error = parentElement.querySelector('.error'); // Az inputElement mező szülőelemében keresünk egy "error" osztályú elemet
-      error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet
-      validation = false; // A valid változó értékét hamisra állítjuk
-  }})
-    
-    if (inputElementValue === "" && inputElementValue !== undefined) { // Ellenőrizzük, hogy az input mező értéke üres-e, és nem undefined
-        const parentElement = inputElement.parentElement; // Megkeressük az input mező szülőelemét, hogy hozzáférjünk a hibaüzenethez
-        const error = parentElement.querySelector('.error'); // A szülőelemben keresünk egy 'error' osztályú elemet a hibaüzenet megjelenítésére
-        error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet az 'error' elemben
-        validation = false; // Ha hibát találtunk, a validáció hamisra változik
+  function validate2({check, list}, errormessage) { // Függvény, amely validálja az input mezőt és hibaüzenetet jelenít meg
+    let validation = true
+    if(check.checked){
+      for(const elem of list){
+        if (elem.value === "" && elem.value !== undefined) { // Ellenőrizzük, hogy az input mező értéke üres-e, és nem undefined
+          const parentElement = elem.parentElement; // Megkeressük az input mező szülőelemét, hogy hozzáférjünk a hibaüzenethez
+          const error = parentElement.querySelector('.error'); // A szülőelemben keresünk egy 'error' osztályú elemet a hibaüzenet megjelenítésére
+          error.innerHTML = errormessage; // Beállítjuk a hibaüzenetet az 'error' elemben
+          validation = false; // Ha hibát találtunk, a validáció hamisra változik
+        }
+      }
     }
-    return validation; // Visszatérünk a validációs eredménnyel, amely lehet igaz vagy hamis
+    else{
+      for(const elem of list){
+        elem.value = ""
+      }
+    }
+    return validation
   }
 
 
